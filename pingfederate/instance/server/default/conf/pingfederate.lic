@@ -1,0 +1,13 @@
+ID=1121916
+Organization=68
+Product=PingFederate
+Version=9.2
+IssueDate=2019-02-23
+EnforcementType=3
+ExpirationDate=2019-03-25
+Tier=Free
+SaasProvisioning=true
+WSTrustSTS=true
+OAuth=true
+SignCode=FF07
+Signature=302D02147843DACFA41DBE001B566A5258C7520FDB88C8190215008DCCF3D8783E371336EC206FED5F0D22CF5D658A
