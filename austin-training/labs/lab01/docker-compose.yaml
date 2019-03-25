@@ -1,0 +1,20 @@
+version: "3.1"
+
+services:
+  pingdirectory:
+    image: pingidentity/pingdirectory
+    environment:
+      # - SERVER_PROFILE_URL=...git repo...
+      # - SERVER_PROFILE_PATH=...path in git repo...
+      - VERBOSE=false
+    ports:
+      - 1636:636
+      - 1443:443
+    networks:
+      - pingnet
+    volumes:
+      - ${DEVOPS_IN_BASE}/lab01/pingdirectory:/opt/out
+      - ${DEVOPS_OUT_BASE}/pingdirectory-template:/opt/in
+                    
+networks:
+    pingnet:

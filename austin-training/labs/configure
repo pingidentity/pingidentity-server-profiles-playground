@@ -1,0 +1,73 @@
+#!/bin/bash
+THIS="$( basename "${0}" )"
+cd "$( dirname "${0}" )"
+
+################################################################################
+# Check for a .pingidentity directory with propertyfile
+################################################################################
+PROPS_FILE="${HOME}/.pingidentity/austin.properties"
+test -f "${PROPS_FILE}" && source "${PROPS_FILE}"
+
+
+################################################################################
+# Print usage information
+################################################################################
+function usage()
+{
+cat <<EO_USAGE
+
+Usage: ${THIS} [ configure ]
+
+Examples
+
+    ${THIS}
+
+EO_USAGE
+
+  exit
+}
+
+################################################################################
+# Allow the user to interactively provide configuraiton information to be 
+# set to .pingidentity/ldapsdk.properties file
+################################################################################
+function configure()
+{
+  echo "
+###############################################################################################
+#                                 ${THIS} Configuration
+###############################################################################################
+#
+# This will create properties in ${PROPS_FILE}
+# and they will be used as environment variables for scripts, .yamls, etc...
+#
+# To edit these in the future simply run: ./${THIS}
+# or edit the property file directory.
+###############################################################################################
+"
+  DEVOPS_IN_BASE="/tmp/austin"
+  DEVOPS_OUT_BASE=$( cd ..; pwd )
+
+  echo -n "Docker Container DEVOPS_IN_BASE  local base [${DEVOPS_IN_BASE}] ? "
+  read answer
+  ! test -z "${answer}" && DEVOPS_IN_BASE="${answer}"
+  echo -n "Docker Container DEVOPS_OUT_BASE local base [${DEVOPS_OUT_BASE}] ? "
+  read answer
+  ! test -z "${answer}" && DEVOPS_OUT_BASE="${answer}"
+
+  ! test -z "${DEVOPS_IN_BASE}" && echo "export DEVOPS_IN_BASE=${DEVOPS_IN_BASE}" > ${PROPS_FILE}
+  ! test -z "${DEVOPS_OUT_BASE}" && echo "export DEVOPS_OUT_BASE=${DEVOPS_OUT_BASE}" >> ${PROPS_FILE}
+
+  . ${PROPS_FILE}
+}
+
+configure
+
+echo ""
+echo "To use these properties, source then in your .bash_profile or do it now:"
+echo ""
+echo "  . ${PROPS_FILE}"
+echo ""
+
+
+
