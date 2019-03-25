@@ -16,5 +16,12 @@ services:
       - ${DEVOPS_IN_BASE}/lab01/pingdirectory:/opt/out
       - ${DEVOPS_OUT_BASE}/pingdirectory-template:/opt/in
                     
+  pingdataconsole:
+    image: pingidentity/pingdataconsole
+    ports:
+      - 8080:8080
+    networks:
+      - pingnet
+
 networks:
     pingnet:
