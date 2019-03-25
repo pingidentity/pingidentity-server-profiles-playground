@@ -5,6 +5,7 @@ CMD="${1}"
 PROPS_FILE="${HOME}/.pingidentity/austin.properties"
 
 test ! -f "${PROPS_FILE}" && ./configure
+test -z "${DEVOPS_IN_BASE}" && . "${PROPS_FILE}"
 
 ################################################################################
 # Print usage information
@@ -24,6 +25,9 @@ EO_USAGE
   exit
 }
 
+test -z "${DEVOPS_IN_BASE}" && exit
+test ! -d "${DEVOPS_IN_BASE}" && echo "No local DEVOPS_IN_BASE  base found: ${DEVOPS_IN_BASE}" && exit
+
 echo "
 ################################################################################
 # This will archive the '${DEVOPS_IN_BASE}' directory and
@@ -32,8 +36,6 @@ echo "
 #    Archive Directory: ${DEVOPS_IN_BASE}.$$
 ################################################################################
 "
-
-test ! -d "${DEVOPS_IN_BASE}"  && echo "No local DEVOPS_IN_BASE  base found: ${DEVOPS_IN_BASE}"
 
 test   -d "${DEVOPS_IN_BASE}" && mv "${DEVOPS_IN_BASE}" "${DEVOPS_IN_BASE}.$$"
 
