@@ -15,4 +15,16 @@ dsconfig create-external-server \
     --set key-manager-provider:Null  \
     --set "trust-manager-provider:Blind Trust" 
 
+dsconfig create-dn-map \
+    --map-name student-to-instructor  \
+    --set 'from-dn-pattern:**,o=student'  \
+    --set "to-dn-pattern:{1},o=instructor" 
 
+dsconfig create-plugin \
+    --plugin-name pta-instructor  \
+    --type pass-through-authentication  \
+    --set enabled:true  \
+    --set server:scalr-instructor-box  \
+    --set override-local-password:true  \
+    --set dn-map:student-to-instructor  \
+    --set search-base-dn:o=student 
