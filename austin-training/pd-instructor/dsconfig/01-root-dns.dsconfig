@@ -1,10 +1,9 @@
 #
-# Ping Data Sync User
+# Instructor user
 #
 dsconfig create-root-dn-user \
-    --user-name "Ping Data Sync"  \
-    --set alternate-bind-dn:cn=sync  \
-    --set alternate-bind-dn:cn=datasync  \
+    --user-name "Instructor"  \
+    --set alternate-bind-dn:cn=instructor  \
     --set inherit-default-root-privileges:false  \
     --set password:2FederateM0re  \
     --set privilege:bypass-acl  \
