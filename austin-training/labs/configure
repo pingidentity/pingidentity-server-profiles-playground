@@ -48,7 +48,7 @@ function configure()
 ###############################################################################################
 "
   DEVOPS_IN_BASE=$( cd ..; pwd )
-  DEVOPS_OUT_BASE="/tmp/austin"
+  DEVOPS_OUT_BASE="${HOME}/austin/labs"
 
   echo -n "Docker Container DEVOPS_IN_BASE  local base [${DEVOPS_IN_BASE}] ? "
   read answer
