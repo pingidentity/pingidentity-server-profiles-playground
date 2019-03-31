@@ -1,11 +1,13 @@
 #!/bin/bash
 THIS="$( basename "${0}" )"
 cd "$( dirname "${0}" )"
+DOT_PINGIDENTITY="${HOME}/.pingidentity"
+test -d "${DOT_PINGIDENTITY}" || mkdir -p "${DOT_PINGIDENTITY}"
 
 ################################################################################
 # Check for a .pingidentity directory with propertyfile
 ################################################################################
-PROPS_FILE="${HOME}/.pingidentity/austin.properties"
+PROPS_FILE="${DOT_PINGIDENTITY}/austin.properties"
 test -f "${PROPS_FILE}" && source "${PROPS_FILE}"
 
 
@@ -63,11 +65,13 @@ function configure()
 
 configure
 
-echo ""
-echo "To use these properties, source then in your .bash_profile or do it now:"
-echo ""
-echo "  . ${PROPS_FILE}"
-echo ""
 
+echo "
+To use these properties, source then in your .bash_profile. And restart your shell:
 
+  echo \". ${PROPS_FILE}\" >> ~/.bash_profile
 
+Or source it into your current shell:
+
+  . ${PROPS_FILE}
+"
