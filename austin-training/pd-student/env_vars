@@ -29,3 +29,5 @@ USER_BASE_DN=o=student
 #CERTIFICATE_NICKNAME=server-cert
 
 #TAIL_LOG_FILES="${SERVER_ROOT_DIR}/logs/access ${SERVER_ROOT_DIR}/logs/audit"
+
+MAKELDIF_USERS=1

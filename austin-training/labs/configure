@@ -45,8 +45,8 @@ function configure()
 # or edit the property file directory.
 ###############################################################################################
 "
-  DEVOPS_IN_BASE="/tmp/austin"
-  DEVOPS_OUT_BASE=$( cd ..; pwd )
+  DEVOPS_IN_BASE=$( cd ..; pwd )
+  DEVOPS_OUT_BASE="/tmp/austin"
 
   echo -n "Docker Container DEVOPS_IN_BASE  local base [${DEVOPS_IN_BASE}] ? "
   read answer

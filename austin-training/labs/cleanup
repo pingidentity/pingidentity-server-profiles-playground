@@ -5,7 +5,7 @@ CMD="${1}"
 PROPS_FILE="${HOME}/.pingidentity/austin.properties"
 
 test ! -f "${PROPS_FILE}" && ./configure
-test -z "${DEVOPS_IN_BASE}" && . "${PROPS_FILE}"
+test -z "${DEVOPS_OUT_BASE}" && . "${PROPS_FILE}"
 
 ################################################################################
 # Print usage information
@@ -25,23 +25,22 @@ EO_USAGE
   exit
 }
 
-test -z "${DEVOPS_IN_BASE}" && exit
-test ! -d "${DEVOPS_IN_BASE}" && echo "No local DEVOPS_IN_BASE  base found: ${DEVOPS_IN_BASE}" && exit
+test -z "${DEVOPS_OUT_BASE}" && exit
 
 echo "
 ################################################################################
-# This will archive the '${DEVOPS_IN_BASE}' directory and
+# This will archive the '${DEVOPS_OUT_BASE}' directory and
 # and recreate a new set of directories.
 #
-#    Archive Directory: ${DEVOPS_IN_BASE}.$$
+#    Archive Directory: ${DEVOPS_OUT_BASE}.$$
 ################################################################################
 "
 
-test   -d "${DEVOPS_IN_BASE}" && mv "${DEVOPS_IN_BASE}" "${DEVOPS_IN_BASE}.$$"
+test   -d "${DEVOPS_OUT_BASE}" && mv "${DEVOPS_OUT_BASE}" "${DEVOPS_OUT_BASE}.$$"
 
-mkdir -p "${DEVOPS_IN_BASE}/lab01/pingdirectory"
-mkdir -p "${DEVOPS_IN_BASE}/lab02"
-mkdir -p "${DEVOPS_IN_BASE}/lab03"
-mkdir -p "${DEVOPS_IN_BASE}/lab04"
-mkdir -p "${DEVOPS_IN_BASE}/lab05"
-mkdir -p "${DEVOPS_IN_BASE}/lab06"
+mkdir -p "${DEVOPS_OUT_BASE}/lab01/pingdirectory"
+mkdir -p "${DEVOPS_OUT_BASE}/lab02"
+mkdir -p "${DEVOPS_OUT_BASE}/lab03"
+mkdir -p "${DEVOPS_OUT_BASE}/lab04"
+mkdir -p "${DEVOPS_OUT_BASE}/lab05"
+mkdir -p "${DEVOPS_OUT_BASE}/lab06"

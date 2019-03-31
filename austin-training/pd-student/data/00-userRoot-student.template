@@ -36,7 +36,7 @@ initials: {givenName:1}<random:chars:ABCDEFGHIJKLMNOPQRSTUVWXYZ:1>{sn:1}
 employeeNumber: <sequential:0>
 uid: user.{employeeNumber}
 mail: {uid}@[maildomain]
-userPassword: Ping@DeepDive2019
+userPassword: 2FederateM0re
 telephoneNumber: <random:telephone>
 homePhone: <random:telephone>
 pager: <random:telephone>
