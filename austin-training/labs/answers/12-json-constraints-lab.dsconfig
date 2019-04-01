@@ -1,0 +1,17 @@
+dsconfig create-json-attribute-constraints --attribute-type acmeProfile \
+  --set enabled:true --set allow-unnamed-fields:false
+dsconfig create-json-field-constraints --attribute-type acmeProfile --json-field roleIDs \
+  --set value-type:integer --set is-required:true --set is-array:required
+dsconfig create-json-field-constraints --attribute-type acmeProfile --json-field preferredRole \
+  --set value-type:integer --set is-required:true --set index-values:true  
+dsconfig create-json-field-constraints --attribute-type acmeProfile --json-field costCenter \
+  --set value-type:object --set is-required:true
+dsconfig create-json-field-constraints --attribute-type acmeProfile --json-field certificate \
+  --set value-type:string --set is-required:true
+dsconfig create-json-field-constraints --attribute-type acmeProfile --json-field costCenter.id \
+  --set value-type:string --set is-required:true
+dsconfig create-json-field-constraints --attribute-type acmeProfile --json-field costCenter.name \
+  --set value-type:string --set is-required:true
+dsconfig create-json-field-constraints --attribute-type acmeProfile --json-field costCenter.active \
+  --set value-type:boolean --set is-required:true
+
