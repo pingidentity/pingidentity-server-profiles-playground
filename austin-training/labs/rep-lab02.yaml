@@ -1,0 +1,23 @@
+version: "3.1"
+
+services:
+  pingdirectory-denver-1:
+    image: pingidentity/pingdirectory
+    environment:
+#      - SERVER_PROFILE_URL=https://github.com/pingidentity/server-profile-pingidentity-baseline.git
+#      - SERVER_PROFILE_PATH=pingdirectory
+      - Verbose=false
+      - LOCATION=Denver
+    networks:
+      - rep-lab01_pingnet
+    ports:
+      - 3389:389
+      - 4636:636
+      - 5443:443
+    volumes:
+      - ${DEVOPS_IN_BASE}/pingdirectory-rep-lab02:/opt/in
+      - ${DEVOPS_IN_BASE}/rep-labs-vol:/opt/stuff
+
+networks:
+  rep-lab01_pingnet:
+    external: true

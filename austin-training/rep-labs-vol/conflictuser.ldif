@@ -1,0 +1,12 @@
+dn: uid=user.conflict,ou=people,ou=source,o=sync
+changetype: add
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: user.conflict
+givenName: Romeo
+cn: Romeo Valerio
+sn: Valerio
+mail: user.conflict@example.com
+userPassword: password123

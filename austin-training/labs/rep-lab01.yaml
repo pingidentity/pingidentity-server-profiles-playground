@@ -1,0 +1,47 @@
+version: "3.1"
+
+services:
+  pingdirectory-austin-1:
+    image: pingidentity/pingdirectory
+    environment:
+#      - SERVER_PROFILE_URL=https://github.com/pingidentity/server-profile-pingidentity-baseline.git
+#      - SERVER_PROFILE_PATH=pingdirectory
+      - Verbose=false
+      - LOCATION=Austin
+    networks:
+      - pingnet
+    ports:
+      - 1389:389
+      - 1636:636
+      - 1443:443
+    volumes:
+      - ${DEVOPS_IN_BASE}/pingdirectory-rep-lab01:/opt/in
+      - ${DEVOPS_IN_BASE}/rep-labs-vol:/opt/stuff
+
+  pingdirectory-austin-2:
+    image: pingidentity/pingdirectory
+    environment:
+#      - SERVER_PROFILE_URL=https://github.com/pingidentity/server-profile-pingidentity-baseline.git
+#      - SERVER_PROFILE_PATH=pingdirectory
+      - Verbose=false
+      - LOCATION=Austin
+    networks:
+      - pingnet
+    ports:
+      - 2389:389
+      - 2636:636
+      - 2443:443
+    volumes:
+      - ${DEVOPS_IN_BASE}/pingdirectory-rep-lab01:/opt/in
+      - ${DEVOPS_IN_BASE}/rep-labs-vol:/opt/stuff
+
+  pingdataconsole:
+    image: pingidentity/pingdataconsole
+    ports:
+      - 8080:8080
+      - 8443:8443
+    networks: 
+      - pingnet
+                    
+networks:
+    pingnet:
