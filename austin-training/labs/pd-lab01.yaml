@@ -6,7 +6,7 @@ services:
     environment:
       # - SERVER_PROFILE_URL=...git repo...
       # - SERVER_PROFILE_PATH=...path in git repo...
-      - VERBOSE=true
+      - VERBOSE=false
     ports:
       - 1636:636
       - 1443:443
@@ -14,7 +14,8 @@ services:
       - pingnet
     volumes:
       - ${DEVOPS_IN_BASE}/pd-student:/opt/in
-      - ${DEVOPS_OUT_BASE}/lab01/pingdirectory:/opt/out
+      - ${DEVOPS_IN_BASE}/pd-labs-vol:/opt/stuff
+      - ${DEVOPS_OUT_BASE}/pd-lab01/pingdirectory:/opt/out
                     
   pingdataconsole:
     image: pingidentity/pingdataconsole

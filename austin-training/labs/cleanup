@@ -38,9 +38,4 @@ echo "
 
 test   -d "${DEVOPS_OUT_BASE}" && mv "${DEVOPS_OUT_BASE}" "${DEVOPS_OUT_BASE}.$$"
 
-mkdir -p "${DEVOPS_OUT_BASE}/lab01/pingdirectory"
-mkdir -p "${DEVOPS_OUT_BASE}/lab02"
-mkdir -p "${DEVOPS_OUT_BASE}/lab03"
-mkdir -p "${DEVOPS_OUT_BASE}/lab04"
-mkdir -p "${DEVOPS_OUT_BASE}/lab05"
-mkdir -p "${DEVOPS_OUT_BASE}/lab06"
+mkdir -p "${DEVOPS_OUT_BASE}/pd-lab01/pingdirectory"
