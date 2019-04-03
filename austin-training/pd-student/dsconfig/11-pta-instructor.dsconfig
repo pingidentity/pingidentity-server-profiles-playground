@@ -1,0 +1,2 @@
+dsconfig set-trust-manager-provider-prop --provider-name "Blind Trust" --set enabled:true
+

@@ -1,0 +1,142 @@
+#
+# This dsconfig batch file shows an example configuration used
+# to build a one-way sync relationship between PingDirectory and
+# PingOne For Customers. All values surrounded by square brackets
+# must be replaced before the batch file can be used.
+#
+
+dsconfig set-trust-manager-provider-prop --provider-name "Blind Trust" --set enabled:true
+
+dsconfig set-external-server-prop \
+    --server-name ping-directory \
+
+dsconfig create-external-server \
+    --server-name ping-directory \
+    --type ping-identity-ds \
+    --set server-host-name:10.101.52.240 \
+    --set server-port:1636 \
+    --set authentication-method:simple \
+    --set connection-security:ssl \
+    --set key-manager-provider:Null \
+    --set "trust-manager-provider:Blind Trust" \
+    --set bind-dn:"cn=Sync User,cn=Root DNs,cn=config" \
+    --set password:2FederateM0re
+
+# Define Sync Source and Destination
+dsconfig create-sync-source \
+    --source-name pd-instructor  \
+    --type ping-identity  \
+    --set base-dn:ou=people,o=instructor  \
+    --set server:ping-directory
+
+dsconfig create-sync-destination \
+    --destination-name PingOne  \
+    --type ping-one-customer  \
+    --set ping-one-api-url:https://api-staging.pingone.com/v1 \
+    --set ping-one-auth-url:https://auth-staging.pingone.com/302591fb-68be-4532-9a8f-8f6f0bfce77b/as/token \
+    --set ping-one-environment-id:302591fb-68be-4532-9a8f-8f6f0bfce77b  \
+    --set ping-one-oauth-client-id:7a99075f-f345-42a2-8748-72b83e0cb03b  \
+    --set ping-one-oauth-client-secret:Ba3tznkVXQZXig6Vz7r38j3h219n6rbWF3BRBQImX_3EVWTcy.ys1wpgWAO_pNwt
+
+# Create A Sync Pipe
+dsconfig create-sync-pipe \
+    --pipe-name pd-to-pingone \
+    --set 'retry-backoff-increase-by:100 ms'  \
+    --set sync-destination:PingOne  \
+    --set sync-source:pd-instructor
+# Define Attribute mappings
+# PingOne For Customers has a fixed schema. In order to successfully
+# sync users from a Sync Source it is necessary to provide values for the
+# following attributes:
+# 1. "name": A JSON object in the form {"name": {"givenName": "John", "familyName": "Doe", "middleName": "M"}}
+# 2. "email": A JSON string that must be a valid email address AND be UNIQUE in a PingOne Environment. This value is required on creates.
+# 3. "userName": A JSON string that must be UNIQUE in a PingOne Environment. This value is required on creates.
+# 4. "population": A JSON object in the form {"id": "population-id"}. This value is required on creates.
+# 5. "phone": A JSON string in the form "555-555-5555"
+#
+# If values are provided for fields not listed here it may result in errors
+# during synchronization.
+
+dsconfig create-attribute-map \
+    --map-name PingOneUserMap
+
+dsconfig create-attribute-mapping \
+    --map-name PingOneUserMap  \
+    --mapping-name username  \
+    --type constructed  \
+    --set value-pattern:{uid}
+
+dsconfig create-attribute-mapping \
+    --map-name PingOneUserMap  \
+    --mapping-name password  \
+    --type direct  \
+    --set from-attribute:userPassword
+
+dsconfig create-attribute-mapping \
+    --map-name PingOneUserMap  \
+    --mapping-name email  \
+    --type constructed  \
+    --set value-pattern:{uid}.{sn}@example.com
+
+dsconfig create-attribute-mapping \
+    --map-name PingOneUserMap  \
+    --mapping-name population  \
+    --type constructed  \
+    --set 'value-pattern:{{"id":"a87476b0-eabf-4372-b4d2-0a7fd6094dc1"}}'
+
+dsconfig create-attribute-mapping \
+    --map-name PingOneUserMap  \
+    --mapping-name primaryPhone  \
+    --type direct  \
+    --set from-attribute:telephoneNumber
+
+dsconfig create-attribute-mapping \
+    --map-name PingOneUserMap  \
+    --mapping-name name  \
+    --type constructed  \
+    --set 'value-pattern:{{"given":"{uid:jsonEscape}","family":"{sn:jsonEscape}"}}'
+
+# Create a Sync Class and associate the defined Attribute Map
+dsconfig create-sync-class \
+    --pipe-name pd-to-pingone  \
+    --class-name pd-to-pinone-users  \
+    --set attribute-map:PingOneUserMap  \
+    --set auto-mapped-source-attribute:-none-  \
+    --set destination-correlation-attributes:username  \
+    --set destination-correlation-attributes:email  \
+    --set creates-as-modifies:true  \
+    --set include-filter:(objectClass=person)
+
+# Define JSON Attributes
+dsconfig create-json-attribute \
+    --pipe-name pd-to-pingone  \
+    --class-name pd-to-pinone-users  \
+    --attribute-name name
+
+dsconfig create-json-attribute \
+    --pipe-name pd-to-pingone  \
+    --class-name pd-to-pinone-users  \
+    --attribute-name population  \
+    --set include-field:id
+
+# Setup Debug Targets for added logging
+dsconfig create-debug-target \
+    --publisher-name "File-Based Debug Logger" \
+    --target-name com.unboundid.directory.sync.pingone.PingOneCustomerSyncDestination \
+    --set debug-level:verbose
+
+# This will log all of the raw HTTP traffic between PingOne and DataSync,
+# which can include sensitive information like user passwords and
+# authentication tokens. DO NOT leave on in a Production environment.
+dsconfig create-debug-target \
+    --publisher-name "File-Based Debug Logger" \
+    --target-name com.unboundid.directory.sync.pingone.HTTPTrafficLogger \
+    --set debug-level:verbose
+
+
+#### RESYNC ####
+# This is an example of running resync. If resync is being run against an
+# instance that has already been loaded with users, it is recommended that
+# the password attribute be added to the list of ignored destination attributes.
+#
+#   resync --pipe-name [SYNC_PIPE_NAME] --excludeDestinationAttr password

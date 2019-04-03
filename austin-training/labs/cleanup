@@ -39,3 +39,5 @@ echo "
 test   -d "${DEVOPS_OUT_BASE}" && mv "${DEVOPS_OUT_BASE}" "${DEVOPS_OUT_BASE}.$$"
 
 mkdir -p "${DEVOPS_OUT_BASE}/pd-lab01/pingdirectory"
+mkdir -p "${DEVOPS_OUT_BASE}/sync-lab03/pingdirectory"
+mkdir -p "${DEVOPS_OUT_BASE}/sync-lab03/pingdatasync"

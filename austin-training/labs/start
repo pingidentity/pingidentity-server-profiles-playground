@@ -1,1 +1,3 @@
+. ~/.pingidentity/austin.properties
+
 docker stack deploy -c ${1}.yaml ${1}
