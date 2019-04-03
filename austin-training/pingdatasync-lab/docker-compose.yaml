@@ -34,6 +34,12 @@ services:
       - 8080:8080
     networks: 
       - pingnet  
-              
+  
+  watcher:
+    image: pingidentity/ldap-sdk-tools
+    command: wait-for pingdirectory:389 -t 600 -- ldapsearch -h pingdirectory -D cn=administrator -w 2FederateM0re -C ps -b ou=people,ou=destination,o=sync "(objectClass=person)"
+    networks: 
+      - pingnet
+
 networks:
     pingnet:
