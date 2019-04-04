@@ -16,7 +16,7 @@ services:
       - pingnet
     volumes:
       - ${DEVOPS_IN_BASE}/poc-pingfederate:/opt/in
-      - ${DEVOPS_IN_BASE}/poc-labs-vol:/opt/stuff
+      #- ${DEVOPS_IN_BASE}/poc-labs-vol:/opt/stuff
       - ${DEVOPS_OUT_BASE}/poc-lab01/pingfederate:/opt/out
 
   pingdirectory:
@@ -33,7 +33,7 @@ services:
       - pingnet
     volumes:
       - ${DEVOPS_IN_BASE}/pd-student:/opt/in
-      - ${DEVOPS_IN_BASE}/poc-labs-vol:/opt/stuff
+      #- ${DEVOPS_IN_BASE}/poc-labs-vol:/opt/stuff
   #    - ${DEVOPS_OUT_BASE}/poc-lab01/pingdirectory:/opt/out
 
   pingdataconsole:
