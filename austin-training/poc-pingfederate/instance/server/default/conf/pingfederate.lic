@@ -1,0 +1,13 @@
+ID=1165818
+Organization=68
+Product=PingFederate
+Version=9.2
+IssueDate=2019-03-28
+EnforcementType=3
+ExpirationDate=2019-04-27
+Tier=Free
+SaasProvisioning=true
+WSTrustSTS=true
+OAuth=true
+SignCode=FF07
+Signature=302C021422CD852CC47B96748B4B7BB324E9D2737104B5A20214473C4372A60EA891B1E0FADE44973BF1FB301E1A
