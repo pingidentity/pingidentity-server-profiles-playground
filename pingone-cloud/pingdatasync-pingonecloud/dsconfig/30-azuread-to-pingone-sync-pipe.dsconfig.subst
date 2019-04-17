@@ -1,0 +1,109 @@
+#
+# Sync Source
+#
+# Microsoft Azure Connection Variables
+#
+dsconfig create-sync-source \
+    --source-name AzureAD  \
+    --type third-party  \
+    --set extension-class:com.pingidentity.sync.AzureADSyncSource  \
+    --set 'extension-argument:tenant-id=${MS_AZURE_TENANT_ID}' \
+    --set 'extension-argument:client-id=${MS_AZURE_APP_REGISTRATION_CLIENT_ID}' \
+    --set 'extension-argument:client-secret=${MS_AZURE_APP_REGISTRATION_CLIENT_SECRET}' \
+#    --set 'extension-argument:filter=country eq '"'"'USA'"'"''  \
+#    --set extension-argument:attributes=userPrincipalName  \
+#    --set extension-argument:attributes=givenName  \
+#    --set extension-argument:attributes=surname  \
+#    --set extension-argument:attributes=state  \
+#    --set extension-argument:attributes=city  \
+#    --set extension-argument:attributes=telephoneNumber  \
+#    --set extension-argument:attributes=jobTitle  \
+#    --set extension-argument:attributes=objectId  \
+#    --set extension-argument:attributes=department  \
+#    --set extension-argument:attributes=streetAddress  \
+#    --set extension-argument:attributes=postalCode  \
+#    --set extension-argument:attributes=displayName 
+
+#
+# Sync Destination
+#
+# PingOne for Customers Connection Variables
+#
+dsconfig create-sync-destination \
+    --destination-name PingOne  \
+    --type ping-one-customer  \
+    --set        'environment-id:${PING_ONE_ENVIRONMENT_ID}' \
+    --set 'default-population-id:${PING_ONE_POPULATION_ID}' \
+    --set       'oauth-client-id:${PING_ONE_CLIENT_ID}' \
+    --set   'oauth-client-secret:${PING_ONE_CLIENT_SECRET}' \
+    --set               'api-url:https://api.pingone.com/v1'  \
+    --set              'auth-url:https://auth.pingone.com/${PING_ONE_ENVIRONMENT_ID}/as/token'
+
+#
+# Mappings
+#
+
+dsconfig create-attribute-map \
+    --map-name azuread-to-pingone-map 
+
+dsconfig create-attribute-mapping \
+    --map-name azuread-to-pingone-map  \
+    --mapping-name address  \
+    --type constructed  \
+    --set 'value-pattern:{{"streetAddress":"{streetAddress:jsonEscape} ","locality":"{city:jsonEscape} ","region":"{state:jsonEscape} ","postalCode":"{postalCode:jsonEscape} "}}' 
+
+dsconfig create-attribute-mapping \
+    --map-name azuread-to-pingone-map  \
+    --mapping-name externalId  \
+    --type direct  \
+    --set from-attribute:objectId 
+
+dsconfig create-attribute-mapping \
+    --map-name azuread-to-pingone-map  \
+    --mapping-name name  \
+    --type constructed  \
+    --set 'value-pattern:{{"given":"{givenName:jsonEscape} ","family":"{surname:jsonEscape} ","formatted":"{displayName:jsonEscape} "}}' 
+
+dsconfig create-attribute-mapping \
+    --map-name azuread-to-pingone-map  \
+    --mapping-name title  \
+    --type constructed  \
+    --set 'value-pattern:{department} - {jobTitle}' 
+
+dsconfig create-attribute-mapping \
+    --map-name azuread-to-pingone-map  \
+    --mapping-name username  \
+    --type direct  \
+    --set from-attribute:userPrincipalName 
+
+#
+# Sync Pipe
+#
+dsconfig create-sync-pipe \
+    --pipe-name azuread-to-pingone  \
+    --set sync-source:AzureAD  \
+    --set sync-destination:PingOne 
+
+#
+# Sync Class
+#
+dsconfig create-sync-class \
+    --pipe-name azuread-to-pingone  \
+    --class-name users  \
+    --set attribute-map:azuread-to-pingone-map  \
+    --set auto-mapped-source-attribute:-none-  \
+    --set destination-correlation-attributes:username 
+
+#
+# JSON Attributes
+#
+dsconfig create-json-attribute \
+    --pipe-name azuread-to-pingone  \
+    --class-name users  \
+    --attribute-name address 
+
+dsconfig create-json-attribute \
+    --pipe-name azuread-to-pingone  \
+    --class-name users  \
+    --attribute-name name 
+
