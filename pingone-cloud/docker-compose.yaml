@@ -9,16 +9,16 @@ services:
       ##################################################################################################
       # Replace the Variables below with the Microsoft Graph API and App Registration Details
       ##################################################################################################
-      - MS_AZURE_TENANT_ID=
-      - MS_AZURE_APP_REGISTRATION_CLIENT_ID=
-      - MS_AZURE_APP_REGISTRATION_CLIENT_SECRET=
+      - MS_AZURE_TENANT_ID=${MS_AZURE_TENANT_ID}
+      - MS_AZURE_APP_REGISTRATION_CLIENT_ID=${MS_AZURE_APP_REGISTRATION_CLIENT_ID}
+      - MS_AZURE_APP_REGISTRATION_CLIENT_SECRET=${MS_AZURE_APP_REGISTRATION_CLIENT_SECRET}
       ##################################################################################################
       # Replace the Variables below with the PingOne for Customer Details
       ##################################################################################################
-      - PING_ONE_ENVIRONMENT_ID=
-      - PING_ONE_POPULATION_ID=
-      - PING_ONE_CLIENT_ID=
-      - PING_ONE_CLIENT_SECRET=
+      - PING_ONE_ENVIRONMENT_ID=${PING_ONE_ENVIRONMENT_ID}
+      - PING_ONE_POPULATION_ID=${PING_ONE_POPULATION_ID}
+      - PING_ONE_CLIENT_ID=${PING_ONE_CLIENT_ID}
+      - PING_ONE_CLIENT_SECRET=${PING_ONE_CLIENT_SECRET}
       - VERBOSE=false
     ports:
       - 2636:636

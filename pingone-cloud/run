@@ -1,0 +1,49 @@
+#!/bin/bash
+cd "$( dirname "${0}" )"
+THIS="$( basename "${0}" )"
+PROJECT="$( basename `pwd` )"
+DOT_PINGIDENTITY="${HOME}/.pingidentity"
+PROPS_FILE="${DOT_PINGIDENTITY}/${PROJECT}.properties"
+
+test ! -f "${PROPS_FILE}" && ./configure
+set -a
+test -f "${PROPS_FILE}" && source "${PROPS_FILE}"
+set +a
+
+docker stack deploy -c ./docker-compose.yaml ${PROJECT}
+
+echo ""
+echo -n "Waiting for container to start (May need to pull images from docker)"
+while true; do
+  echo -n "."
+  sleep 1
+  CONTAINER=$( docker container ps --filter name=${PROJECT}_pingdatasync* -q | head -1 )
+  test ! -z $CONTAINER && break
+done;
+
+echo ""
+echo "Container has started"
+echo ""
+
+echo -n "Waiting for container ($CONTAINER) to become healthy"
+echo ""
+while true; do
+  docker container ps --filter name=${PROJECT}_pingdatasync* --format='{{.ID}}\t{{.Image}}\t{{.Status}}'
+  sleep 1
+  HEALTH=$( docker inspect -f {{.State.Health.Status}} $CONTAINER )
+  test "$HEALTH" == "healthy" && break
+  test "$HEALTH" == "unhealthy" && echo "A problem has occured" && exit
+done;
+
+echo ""
+echo "Container is healthy"
+echo ""
+echo "
+###############################################################################
+#
+#                    To resync: ./resync
+#  Open a terminal in datasync: docker exec -it ${CONTAINER} /bin/sh
+#          Remove stop service: ./stop
+#
+###############################################################################
+"

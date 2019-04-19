@@ -1,0 +1,84 @@
+#!/bin/bash
+cd "$( dirname "${0}" )"
+THIS="$( basename "${0}" )"
+PROJECT="$( basename `pwd` )"
+DOT_PINGIDENTITY="${HOME}/.pingidentity"
+test -d "${DOT_PINGIDENTITY}" || mkdir -p "${DOT_PINGIDENTITY}"
+
+################################################################################
+# Check for a .pingidentity directory with propertyfile
+################################################################################
+PROPS_FILE="${DOT_PINGIDENTITY}/${PROJECT}.properties"
+test -f "${PROPS_FILE}" && source "${PROPS_FILE}"
+
+################################################################################
+# Print usage information
+################################################################################
+function usage()
+{
+cat <<EO_USAGE
+
+Usage: ${THIS} [ configure ]
+
+Examples
+
+    ${THIS}
+
+EO_USAGE
+
+  exit
+}
+
+function setProperty()
+################################################################################
+# Ask the user to set vairable and write into property file
+################################################################################
+{
+  VAR_TO_SET="${1}" && shift
+  VAR_DEFAULT="${1}" && shift
+  VAR_PROMPT="${*}"
+
+  test -z "${!VAR_TO_SET}" && eval "export \${VAR_TO_SET}=\${VAR_DEFAULT}"
+
+  echo -n "${VAR_PROMPT} [${!VAR_TO_SET}] ? "
+  read answer
+  ! test -z "${answer}" && eval "export \${VAR_TO_SET}=${answer}"
+
+  ! test -z "${!VAR_TO_SET}" && echo "${VAR_TO_SET}=${!VAR_TO_SET}" >> ${PROPS_FILE}.tmp
+}
+
+################################################################################
+# Allow the user to interactively provide configuraiton information to be 
+# set to .pingidentity/ldapsdk.properties file
+################################################################################
+function configure()
+{
+  echo "
+###############################################################################################
+#                                 ${PROJECT} Configuration
+###############################################################################################
+#
+# This will create properties in ${PROPS_FILE}
+# and they will be used as environment variables for scripts, .yamls, etc...
+#
+# To edit these in the future simply run: ./${THIS}
+# or edit the property file directory.
+###############################################################################################
+"
+  rm -f ${PROPS_FILE}.tmp
+
+  setProperty "MS_AZURE_TENANT_ID"                      "" "Microsft Azure TenantID"
+  setProperty "MS_AZURE_APP_REGISTRATION_CLIENT_ID"     "" "Microsft Azure Application Registration ClientID"
+  setProperty "MS_AZURE_APP_REGISTRATION_CLIENT_SECRET" "" "Microsft Azure Application Registration ClientSecret"
+  setProperty "PING_ONE_ENVIRONMENT_ID"                 "" "PingOne EnvironmentID"
+  setProperty "PING_ONE_POPULATION_ID"                  "" "PingOne PopulationID"
+  setProperty "PING_ONE_CLIENT_ID"                      "" "PingOne ClientID"
+  setProperty "PING_ONE_CLIENT_SECRET"                  "" "PingOne ClientSecret"
+
+  mv ${PROPS_FILE}.tmp ${PROPS_FILE}
+
+  . ${PROPS_FILE}
+}
+
+configure
+

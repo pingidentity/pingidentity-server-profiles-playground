@@ -1,0 +1,16 @@
+#!/bin/bash
+cd "$( dirname "${0}" )"
+THIS="$( basename "${0}" )"
+PROJECT="$( basename `pwd` )"
+
+DATASYNC_CONTAINER=$( docker container ps --filter name=pingone-cloud_pingdatasync* -q | head -1 )
+
+test -z ${DATASYNC_CONTAINER} && echo "Please start the swarm first with './run' command" && exit
+
+echo "
+##############################################################################
+# Running a Ping DataSync resync command for the Azure AD to PingOne Cloud
+##############################################################################
+"
+
+docker container exec -it ${DATASYNC_CONTAINER} /opt/out/instance/bin/resync --pipe-name azuread-to-pingone
