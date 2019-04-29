@@ -11,18 +11,7 @@ dsconfig create-sync-source \
     --set 'extension-argument:client-id=${MS_AZURE_APP_REGISTRATION_CLIENT_ID}' \
     --set 'extension-argument:client-secret=${MS_AZURE_APP_REGISTRATION_CLIENT_SECRET}' \
 #    --set 'extension-argument:filter=country eq '"'"'USA'"'"''  \
-#    --set extension-argument:attributes=userPrincipalName  \
-#    --set extension-argument:attributes=givenName  \
-#    --set extension-argument:attributes=surname  \
-#    --set extension-argument:attributes=state  \
-#    --set extension-argument:attributes=city  \
-#    --set extension-argument:attributes=telephoneNumber  \
-#    --set extension-argument:attributes=jobTitle  \
-#    --set extension-argument:attributes=objectId  \
-#    --set extension-argument:attributes=department  \
-#    --set extension-argument:attributes=streetAddress  \
-#    --set extension-argument:attributes=postalCode  \
-#    --set extension-argument:attributes=displayName 
+#    --set extension-argument:attributes=objectId,userPrincipalName,givenName,surname,state,city,telephoneNumber,jobTitle,department,streetAddress,postalCode,displayName 
 
 #
 # Sync Destination
