@@ -33,7 +33,10 @@ services:
       - 443:443
       - 9000:9000
     networks:
-      - pingnet-dmz
+      - pingnet-dmz:
+          aliases:
+            - pingaccess-admin
+
 
   pingfederate:
     image: pingidentity/pingfederate:edge
@@ -52,7 +55,9 @@ services:
       - 9031:9031
       - 9999:9999
     networks:
-      - pingnet-dmz
+      - pingnet-dmz:
+          aliases: 
+            - pingfederate-admin
       - pingnet-internal
 
   pingdirectory:
