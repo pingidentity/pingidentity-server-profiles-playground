@@ -1,0 +1,129 @@
+version: "3.1"
+
+services:
+  consul:
+    image: consul
+    command: agent -dev -client=0.0.0.0
+    ports:
+      - 8500:8500
+
+  vault:
+    image: vault
+    command: server -config=/config/vault.hcl
+    ports:
+      - 8200:8200
+    volumes:
+      - /ws/devops/playground/dev/vault:/config
+    cap_add:
+      - IPC_LOCK
+
+  pingaccess:
+    image: pingidentity/pingaccess:edge
+    command: wait-for pingfederate:9031 -t 300 -- entrypoint.sh start-server
+    environment: 
+      - VERBOSE=true
+      - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_PATH=baseline/pingaccess
+      - SERVER_PROFILE_PARENT=LICENSE
+      - SERVER_PROFILE_LICENSE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_LICENSE_PATH=licenses/pingaccess
+    # volumes:
+    #   - /ws/devops/sp-baseline/baseline/pingaccess:/opt/in
+    ports:
+      - 443:443
+      - 9000:9000
+    networks:
+      - pingnet-dmz
+
+  pingfederate:
+    image: pingidentity/pingfederate:edge
+    # command: wait-for pingdirectory:389 -t 300 -- entrypoint.sh start-server
+    environment:
+      - VERBOSE=true
+      - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_PATH=baseline/pingfederate
+      - SERVER_PROFILE_PARENT=LICENSE
+      - SERVER_PROFILE_LICENSE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_LICENSE_PATH=licenses/pingfederate
+      # - PF_ENGINE_PUBLIC_HOSTNAME=anotherHost.com
+    volumes:
+      - /ws/devops/sp-baseline/getting-started/pingfederate:/opt/in
+    ports:
+      - 9031:9031
+      - 9999:9999
+    networks:
+      - pingnet-dmz
+      - pingnet-internal
+
+  pingdirectory:
+    image: pingidentity/pingdirectory:edge
+    environment:
+      - VERBOSE=true
+      - PF_ENGINE_PUBLIC_HOSTNAME=localhost
+      - PF_ENGINE_PUBLIC_PORT=9031
+      # This server profile delivers extensions
+      - SERVER_PROFILE_URL=https://github.com/arnaudlacour/pingidentity-autoinstall-extensions.git
+      - SERVER_PROFILE_PATH=pingdirectory
+      - SERVER_PROFILE_PARENT=BASELINE
+      # This server profile delivers the bulk of the configuration
+      - SERVER_PROFILE_BASELINE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_BASELINE_PATH=baseline/pingdirectory
+      - SERVER_PROFILE_BASELINE_PARENT=LICENSE
+      # this server profile delivers the license
+      - SERVER_PROFILE_LICENSE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_LICENSE_PATH=licenses/pingdirectory
+      - SERVER_PROFILE_LICENSE_PARENT=CERTS
+      # this server profile provides our dev certificates
+      - SERVER_PROFILE_CERTS_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_CERTS_PATH=dev-certs/pingdata
+      # - TOPOLOGY_PREFIX=local-work-space_pingdirectory_
+      # - MAKELDIF_USERS=100
+      # - USER_BASE_DN=o=test
+    # volumes:
+    #   - /ws/devops/sp-baseline/baseline/pingdirectory:/opt/in
+    ports:
+      - 1636:636
+      - 1389:389
+      - 1443:443
+      - 5005:5005
+    networks:
+      - pingnet-internal
+
+  # pingdatasync:
+  #   image: pingidentity/pingdatasync:edge
+  #   environment:
+  #     # - TOPOLOGY_PREFIX=local-work-space_pingdatasync_
+  #     - SERVER_PROFILE_URL=https://github.com/pingidentity/server-profile-pingidentity-simple-sync.git
+  #     - SERVER_PROFILE_PATH=pingdatasync
+  #   # volumes:
+  #   #   - /tmp/sp/pingdatasync:/opt/in
+  #   ports:
+  #     - 2636:636
+  #     - 2443:443
+  #   networks:
+  #     - pingnet-internal
+ 
+  pingdataconsole:
+    image: pingidentity/pingdataconsole:edge
+    ports:
+      - 8080:8080
+      - 8443:8443
+    networks: 
+      - pingnet-internal
+
+  # pingdelegator:
+  #   image: nginx:alpine
+  #   environment: 
+  #     - VERBOSE=true
+  #   volumes:
+  #     - ./pingdelegator.conf:/etc/nginx/conf.d
+  #     - ./pingdelegator.root:/opt/
+  #   ports:
+  #     - 6080:80
+  #     - 6443:443
+  #   networks:
+  #     - pingnet-internal
+              
+networks:
+    pingnet-internal:
+    pingnet-dmz:
