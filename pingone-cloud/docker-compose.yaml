@@ -4,8 +4,11 @@ services:
   pingdatasync:
     image: pingidentity/pingdatasync:edge
     environment:
-      - SERVER_PROFILE_URL=https://github.com/pingidentity/server-profile-pingidentity-playground.git
+      - SERVER_PROFILE_URL=https://github.com/pingidentity/pingidentity-server-profiles-playground.git
       - SERVER_PROFILE_PATH=pingone-cloud/pingdatasync-pingonecloud
+      - SERVER_PROFILE_PARENT=LICENSE
+      - SERVER_PROFILE_LICENSE_URL=https://github.com/pingidentity/pingidentity-server-profiles.git
+      - SERVER_PROFILE_LICENSE_PATH=licenses/pingdirectory
       ##################################################################################################
       # Replace the Variables below with the Microsoft Graph API and App Registration Details
       ##################################################################################################

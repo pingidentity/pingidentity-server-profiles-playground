@@ -25,16 +25,16 @@ service to provide to the `configure` script.
 ## Quickstart Steps
 There are several scripts provided to easy demonstrate this sample
 
-1. git clone the server-profile-pingidentity-playground.
+1. git clone the pingidentity-server-profiles-playground
 
    ```shell
-   git clone https://github.com/pingidentity/server-profile-pingidentity-playground
+   git clone https://github.com/pingidentity/pingidentity-server-profiles-playground
    ```
 
 2. Go to the pingone-cloud directory.
 
    ```shell
-   cd server-profile-pingidentity-playground/pingone-cloud
+   cd pingidentity-server-profiles-playground/pingone-cloud
    ```
 
 3. Execute the `run` script.  If this the first time, you've run this script here, it will
