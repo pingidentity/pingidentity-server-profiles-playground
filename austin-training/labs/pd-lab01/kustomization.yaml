@@ -7,13 +7,13 @@ resources:
 patches:
 - target:
     kind: StatefulSet
-    name: ping directory
+    name: pingdirectory
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/env
       value:
         - name: SERVER_PROFILE_URL
-          value: "https://www.github.com/pingidentity/pingidentity-server-profiles-playgrou.git"
+          value: "https://www.github.com/pingidentity/pingidentity-server-profiles-playground.git"
         - name: SERVER_PROFILE_PATH
           value: "austin-training/pd-instructor"
         - name: SERVER_PROFILE_BRANCH
