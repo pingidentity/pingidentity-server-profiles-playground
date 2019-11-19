@@ -1,0 +1,21 @@
+kind: Kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+
+resources:
+- https://github.com/pingidentity/pingidentity-devops-getting-started/20-kubernetes/01-standalone/pingdirectory
+- pingdirectory-service.yaml
+
+patches:
+- target:
+    kind: StatefulSet
+    name: pingdirectory
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/env
+      value:
+        - name: SERVER_PROFILE_URL
+          value: "https://www.github.com/pingidentity/pingidentity-server-profiles-playground.git"
+        - name: SERVER_PROFILE_PATH
+          value: "austin-training/pd-student"
+        - name: SERVER_PROFILE_BRANCH
+          value: "austin-k8s"
