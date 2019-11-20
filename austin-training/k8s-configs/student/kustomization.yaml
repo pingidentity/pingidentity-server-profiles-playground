@@ -16,8 +16,46 @@ patches:
       path: /spec/template/spec/containers/0/env
       value:
         - name: SERVER_PROFILE_URL
-          value: "https://www.github.com/pingidentity/pingidentity-server-profiles-playground.git"
+          value: "https://github.com/pingidentity/pingidentity-server-profiles-playground.git"
         - name: SERVER_PROFILE_PATH
           value: "austin-training/pd-student"
         - name: SERVER_PROFILE_BRANCH
           value: "austin-k8s"
+        - name: ORCHESTRATION_TYPE
+          value: "kubernetes"
+        - name: K8S_STATEFUL_SET_NAME
+          value: "pingdirectory"
+        - name: K8S_STATEFUL_SET_SERVICE_NAME
+          value: "pingdirectory"
+        - name: MAKELDIF_USERS
+          value: "1000"
+        - name: TAIL_LOG_FILES
+          value: ""
+- target:
+    kind: StatefulSet
+    name: pingdirectory
+  patch: |-
+    - op: add
+      path: /spec/replicas
+      value: 2
+- target:
+    kind: StatefulSet
+    name: pingdirectory
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/volumeMounts
+      value: [{"name":"out-dir","mountPath":"/opt/out"}]
+- target:
+    kind: StatefulSet
+    name: pingdirectory
+  patch: |-
+    - op: add
+      path: /spec/volumeClaimTemplates
+      value: [{"metadata":{"name":"out-dir"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"5Gi"}},"storageClassName":"pingdirectory-gp2"}}]
+- target:
+    kind: StatefulSet
+    name: pingdirectory
+  patch: |-
+    - op: add
+      path: /spec/template/spec/volumes
+      value: [{"name":"out-dir","persistentVolumeClaim":{"claimName":"out-dir"}}]
