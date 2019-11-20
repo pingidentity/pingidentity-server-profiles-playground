@@ -5,6 +5,7 @@ resources:
 - https://github.com/pingidentity/pingidentity-devops-getting-started/20-kubernetes/01-standalone/pingdirectory
 - https://github.com/pingidentity/pingidentity-devops-getting-started/20-kubernetes/01-standalone/pingdataconsole
 - pingdataconsole-ingress.yaml
+- pingdirectory-ingress.yaml
 
 patches:
 - target:
