@@ -14,7 +14,7 @@ dsconfig create-external-server \
     --server-name ping-directory \
     --type ping-identity-ds \
     --set server-host-name:10.101.52.240 \
-    --set server-port:1636 \
+    --set server-port:636 \
     --set authentication-method:simple \
     --set connection-security:ssl \
     --set key-manager-provider:Null \
@@ -33,10 +33,10 @@ dsconfig create-sync-destination \
     --destination-name PingOne  \
     --type ping-one-customer  \
     --set ping-one-api-url:https://api-staging.pingone.com/v1 \
-    --set ping-one-auth-url:https://auth-staging.pingone.com/302591fb-68be-4532-9a8f-8f6f0bfce77b/as/token \
-    --set ping-one-environment-id:302591fb-68be-4532-9a8f-8f6f0bfce77b  \
-    --set ping-one-oauth-client-id:7a99075f-f345-42a2-8748-72b83e0cb03b  \
-    --set ping-one-oauth-client-secret:Ba3tznkVXQZXig6Vz7r38j3h219n6rbWF3BRBQImX_3EVWTcy.ys1wpgWAO_pNwt
+    --set ping-one-auth-url:https://auth-staging.pingone.com/xxxxxxxx-68be-4532-9a8f-8f6f0bfce77b/as/token \
+    --set ping-one-environment-id:xxxxxxxx-68be-4532-9a8f-8f6f0bfce77b  \
+    --set ping-one-oauth-client-id:xxxxxxxx-f345-42a2-8748-72b83e0cb03b  \
+    --set ping-one-oauth-client-secret:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # Create A Sync Pipe
 dsconfig create-sync-pipe \
@@ -82,7 +82,7 @@ dsconfig create-attribute-mapping \
     --map-name PingOneUserMap  \
     --mapping-name population  \
     --type constructed  \
-    --set 'value-pattern:{{"id":"a87476b0-eabf-4372-b4d2-0a7fd6094dc1"}}'
+    --set 'value-pattern:{{"id":"xxxxxxxx-eabf-4372-b4d2-0a7fd6094dc1"}}'
 
 dsconfig create-attribute-mapping \
     --map-name PingOneUserMap  \

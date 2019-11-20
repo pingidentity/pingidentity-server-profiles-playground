@@ -1,0 +1,64 @@
+
+dsconfig set-trust-manager-provider-prop \
+    --provider-name "Blind Trust"  \
+    --set enabled:true
+
+#
+# Configure the sync pipe end-to-end
+#
+dsconfig create-external-server \
+    --server-name pd-instructor \
+    --type ping-identity-ds \
+    --set server-host-name:3.132.8.91 \
+    --set server-port:636 \
+    --set authentication-method:simple \
+    --set connection-security:ssl \
+    --set key-manager-provider:Null \
+    --set "trust-manager-provider:Blind Trust" \
+    --set bind-dn:cn=administrator \
+    --set password:2FederateM0re
+
+dsconfig create-external-server \
+    --server-name pd-student \
+    --type ping-identity-ds \
+    --set server-host-name:pingdirectory \
+    --set server-port:636 \
+    --set authentication-method:simple \
+    --set connection-security:ssl \
+    --set key-manager-provider:Null \
+    --set "trust-manager-provider:Blind Trust" \
+    --set bind-dn:cn=administrator \
+    --set password:2FederateM0re
+
+dsconfig create-sync-source \
+    --source-name pd-source  \
+    --type ping-identity  \
+    --set base-dn:ou=people,o=instructor  \
+    --set server:pd-instructor  \
+    --set use-changelog-batch-request:true
+
+dsconfig create-sync-destination \
+    --destination-name pd-dest \
+    --type ping-identity \
+    --set base-dn:ou=people,o=student \
+    --set server:pd-student
+
+dsconfig create-sync-pipe \
+    --pipe-name pd-source-to-pd-dest \
+    --set sync-source:pd-source  \
+    --set sync-destination:pd-dest \
+    --set "change-detection-polling-interval:1 s"  \
+    --set num-worker-threads:1
+
+dsconfig create-dn-map \
+    --map-name source-to-destination  \
+    --set "from-dn-pattern:**,ou=people,o=instructor"  \
+    --set "to-dn-pattern:{1},ou=people,o=student"
+
+dsconfig create-sync-class \
+    --pipe-name pd-source-to-pd-dest  \
+    --class-name everythin-as-is  \
+    --set dn-map:source-to-destination  \
+    --set ignore-zero-length-values:true  \
+    --set modifies-as-creates:true  \
+    --set creates-as-modifies:true
