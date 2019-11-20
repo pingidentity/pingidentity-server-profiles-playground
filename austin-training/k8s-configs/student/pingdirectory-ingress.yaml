@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - pingdirectory-ping-cloud-devops-eks-tsigle.ping-devops.com
+    - pingdirectory-${PING_IDENTITY_K8S_NAMESPACE}.ping-devops.com
     secretName: tls-secret
   rules:
-  - host: pingdirectory-ping-cloud-devops-eks-tsigle.ping-devops.com
+  - host: pingdirectory-${PING_IDENTITY_K8S_NAMESPACE}.ping-devops.com
     http:
       paths:
       # This rule gives external access to the pingfederate AS endpoints
